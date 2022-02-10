@@ -16,17 +16,46 @@ public class Player extends JLabel { // Player가 label의 상속을 받고 있�
 
 	private boolean isRight;
 	private boolean isLeft;
-	private boolean isJump;
+	private boolean up;
+	private boolean down;
+
+	public boolean isUp() {
+		return up;
+	}
+
+	public void setUp(boolean up) {
+		this.up = up;
+	}
+
+	public boolean isDown() {
+		return down;
+	}
+
+	public void setDown(boolean down) {
+		this.down = down;
+	}
+
+	private boolean leftWallCrash;
+	private boolean rightWallCrash;
+
+	public boolean isLeftWallCrash() {
+		return leftWallCrash;
+	}
+
+	public void setLeftWallCrash(boolean leftWallCrash) {
+		this.leftWallCrash = leftWallCrash;
+	}
+
+	public boolean isRightWallCrash() {
+		return rightWallCrash;
+	}
+
+	public void setRightWallCrash(boolean rightWallCrash) {
+		this.rightWallCrash = rightWallCrash;
+	}
+
 	private static final int JUMPSPEED = 2;
 	private static final int SPEED = 4;
-
-	public boolean isJump() {
-		return isJump;
-	}
-
-	public void setJump(boolean isJump) {
-		this.isJump = isJump;
-	}
 
 	public boolean isRight() {
 		return isRight;
@@ -55,13 +84,17 @@ public class Player extends JLabel { // Player가 label의 상속을 받고 있�
 	}
 
 	private void initSetting() {
-		x = 70;
+		x = 90;
 		y = 535;
 		setIcon(playerR);
 		setSize(50, 50);
 		setLocation(x, y); // paintComponent 호출해줌
 		isRight = false;
 		isLeft = false;
+		up = false;
+		down = false;
+		leftWallCrash = false;
+		rightWallCrash = false;
 	}
 
 	public void left() {
@@ -78,6 +111,7 @@ public class Player extends JLabel { // Player가 label의 상속을 받고 있�
 					e.printStackTrace();
 				}
 			}
+
 		}).start();
 	}
 
@@ -95,19 +129,20 @@ public class Player extends JLabel { // Player가 label의 상속을 받고 있�
 					e.printStackTrace();
 				}
 			}
+
 		}).start();
 
 	}
 
-	public void jump() {
+	public void up() {
 
-		System.out.println("위쪽이동");
+		System.out.println("업");
 
 		// 점프는 for 문 돌리기.
 
 		// up일때는 sleep(5) ->for
 		// down일때는 sleep(3) ->for
-		isJump = true;
+		up = true;
 
 		new Thread(() -> {
 			for (int i = 0; i < 130 / JUMPSPEED; i++) {
@@ -119,8 +154,20 @@ public class Player extends JLabel { // Player가 label의 상속을 받고 있�
 					e.printStackTrace();
 				}
 			}
+			up = false;
+			down(); // 메서드 재활용 !
+		}).start();
 
-			for (int i = 0; i < 130 / JUMPSPEED; i++) {
+	}
+
+	public void down() {
+
+		System.out.println("다운");
+		down = true;
+
+		new Thread(() -> {
+
+			while (down) {
 				y = y + JUMPSPEED;
 				setLocation(x, y);
 
@@ -131,7 +178,7 @@ public class Player extends JLabel { // Player가 label의 상속을 받고 있�
 				}
 
 			}
-			isJump = false;
+			down = false;
 		}).start();
 
 	}

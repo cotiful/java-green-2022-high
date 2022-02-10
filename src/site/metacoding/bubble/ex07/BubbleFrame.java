@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 
 /**
  * 
- * @author 메타코딩 목적: 점프.
+ * @author 메타코딩 목적: 색상테스트 충돌하게 만들
  *
  */
 
@@ -21,20 +21,29 @@ public class BubbleFrame extends JFrame {
 	int count = 0;
 
 	public BubbleFrame() {
+
 		initObject();
 		initSetting();
 		initListener();
+
+		initService();
 		setVisible(true); // 내부에 paintComponent() 호출 코드가 있다.
+		// 테스트
+		new BackgroundMapService(player);
+	}
+
+	private void initService() {
+		new Thread(new BackgroundMapService(player)).start();
 	}
 
 	// new 하는 것
 	private void initObject() {
-		backgroundMap = new JLabel();
-		backgroundMap.setIcon(new ImageIcon("image/backgroundMap.png"));
+		backgroundMap = new JLabel(new ImageIcon("image/backgroundMap.png"));
 		setContentPane(backgroundMap); // 백그라운드 화면 설정
 
 		player = new Player();
 		add(player);
+
 	}
 
 	// 각종 모든 세팅
@@ -61,10 +70,13 @@ public class BubbleFrame extends JFrame {
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 					// isRight를 false
 					player.setRight(false);
+
 				} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 					// isLeft를 false
 					player.setLeft(false);
+
 				}
+
 			}
 
 			@Override
@@ -74,17 +86,19 @@ public class BubbleFrame extends JFrame {
 
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 					// 키보드를 누르고 있는 동안 right() 메서드를 한번만 실행하고 싶다.
-					if (player.isRight() == false) {
+					if (player.isRight() == false && player.isRightWallCrash() == false) {
 						player.right();
+
 					}
 
 				} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-					if (player.isLeft() == false) {
+					if (player.isLeft() == false && player.isLeftWallCrash() == false) {
 						player.left();
+
 					}
 				} else if (e.getKeyCode() == 38) {
-					if (player.isJump() == false) {
-						player.jump();
+					if (player.isUp() == false && player.isDown() == false) { // 중복 점프를 막기위해서 &&
+						player.up();
 					}
 				}
 			}
