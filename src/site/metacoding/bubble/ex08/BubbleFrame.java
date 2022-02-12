@@ -1,4 +1,4 @@
-package site.metacoding.bubble.ex07;
+package site.metacoding.bubble.ex08;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -13,10 +13,21 @@ import javax.swing.JLabel;
  *
  */
 
+//main을 가진 클래스는 해당 프로그램에 컨텍스트를 다 알 수 있다. 
+
 public class BubbleFrame extends JFrame {
 
+	private BubbleFrame context = this;
 	private JLabel backgroundMap;
 	private Player player;
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
 
 	int count = 0;
 
@@ -41,7 +52,7 @@ public class BubbleFrame extends JFrame {
 		backgroundMap = new JLabel(new ImageIcon("image/backgroundMap.png"));
 		setContentPane(backgroundMap); // 백그라운드 화면 설정
 
-		player = new Player();
+		player = new Player(context); // player가 new 될 때 context로 넘어가게
 		add(player);
 
 	}
@@ -100,6 +111,9 @@ public class BubbleFrame extends JFrame {
 					if (player.isUp() == false && player.isDown() == false) { // 중복 점프를 막기위해서 &&
 						player.up();
 					}
+				} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+					// System.out.println("스페이스바 클릭");
+					player.attack();
 				}
 			}
 		});
